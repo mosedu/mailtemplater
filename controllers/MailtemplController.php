@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Mailtempl;
 use app\models\MailtemplSearch;
+use app\models\TemplatesendForm;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -19,11 +20,11 @@ class MailtemplController extends Controller
     public function actions()
     {
         return [
-            'files-get' => [
+            'images-get' => [
                 'class' => GetAction::className(),
                 'url' => 'http://'.$_SERVER['HTTP_HOST'].'/images/', // Directory URL address, where files are stored.
                 'path' => '@webroot/images', // Or absolute path to directory where files are stored.
-                'type' => GetAction::TYPE_FILES,
+                'type' => GetAction::TYPE_IMAGES,
             ],
             'image-upload' => [
                 'class' => UploadAction::className(),
@@ -126,6 +127,39 @@ class MailtemplController extends Controller
 
         return $this->redirect(['index']);
     }
+
+    /**
+     * @param int $id
+     * @return string|\yii\web\Response
+     */
+    public function actionSend($id)
+    {
+        $model = new TemplatesendForm();
+        $template = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            Yii::$app->session->setFlash('success', 'Отправлено писем: ' . $this->sendMails($template, $model));
+            return $this->redirect(['index', ]);
+//            return $this->redirect(['view', 'id' => $model->mt_id]);
+        }
+
+        $model->templateid = $template->mt_id;
+
+        return $this->render('send', [
+            'model' => $model,
+            'template' => $template,
+        ]);
+    }
+
+    /**
+     * @param Mailtempl $template
+     * @param TemplatesendForm $model
+     * @return int
+     */
+    public function sendMails($template, $model) {
+        return 5;
+    }
+
 
     /**
      * Finds the Mailtempl model based on its primary key value.

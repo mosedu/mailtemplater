@@ -31,7 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update}',
+                'template' => '{view} {update} {send}',
+                'buttons' => [
+                    'send' => function ($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-envelope"></span>', $url, ['title' => 'Отправить', ]);
+                    },
+                ],
             ],
         ],
     ]); ?>

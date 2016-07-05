@@ -6,6 +6,7 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%listgroup}}".
@@ -16,6 +17,7 @@ use yii\db\Expression;
  */
 class Listgroup extends \yii\db\ActiveRecord
 {
+    public static $_aList = null;
 
     /**
      * @return array
@@ -47,6 +49,7 @@ class Listgroup extends \yii\db\ActiveRecord
     {
         return [
             [['lg_createtime'], 'safe'],
+            [['lg_name'], 'unique', ],
             [['lg_name'], 'string', 'max' => 255],
         ];
     }
@@ -62,4 +65,16 @@ class Listgroup extends \yii\db\ActiveRecord
             'lg_name' => 'Наименование',
         ];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public static function getList($bForce = false) {
+        if( $bForce || (self::$_aList === null) ) {
+            $_aModel =  self::find()->orderBy('lg_name')->all();
+            self::$_aList = ArrayHelper::map($_aModel, 'lg_id', 'lg_name');
+        }
+        return self::$_aList;
+    }
+
 }

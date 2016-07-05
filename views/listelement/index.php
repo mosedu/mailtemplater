@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\ArrayHelper;
+use app\models\Listgroup;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ListelementSearch */
@@ -37,15 +39,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     );
                 },
             ],
+            [
+                'class' => 'yii\grid\DataColumn',
+                'attribute' => '_allgroups',
+                'filter' => Listgroup::getList(),
+                'value' => function ($model, $key, $index, $column) {
+                    /** @var app\models\Listelement $model */
+                    return Html::encode(
+                        implode(', ', ArrayHelper::map($model->groups, 'lg_id', 'lg_name'))
+                    );
+                },
+            ],
 //            'le_fam',
 //            'le_name',
             // 'le_otch',
             // 'le_org',
 
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update}',
-            ],
         ],
     ]); ?>
 </div>

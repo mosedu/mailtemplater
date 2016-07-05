@@ -18,7 +18,9 @@
         "yiisoft/yii2": ">=2.0.5",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "vova07/yii2-imperavi-widget": "*"
+        "vova07/yii2-imperavi-widget": "*",
+        "mosedu/yii2-multirows": "*",
+        "kartik-v/yii2-widget-select2": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

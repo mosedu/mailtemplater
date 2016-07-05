@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Listelement;
+use app\models\Listelgr;
 
 /**
  * ListelementSearch represents the model behind the search form about `app\models\Listelement`.
@@ -18,8 +19,9 @@ class ListelementSearch extends Listelement
     public function rules()
     {
         return [
-            [['le_id'], 'integer'],
-            [['le_createtime', 'le_email', 'le_fam', 'le_name', 'le_otch', 'le_org'], 'safe'],
+            [['le_id', '_allgroups', ], 'integer'],
+//            [['_allgroups'], 'in', 'range' => array_keys(Listgroup::getList()), 'allowArray' => true, ],
+            [['le_createtime', 'le_email', 'le_fam', 'le_name', 'le_otch', 'le_org', ], 'safe'],
         ];
     }
 
@@ -55,6 +57,11 @@ class ListelementSearch extends Listelement
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
+        }
+
+        if( !empty($this->_allgroups) ) {
+            $query->leftJoin(Listelgr::tableName(), Listelgr::tableName() . '.elgr_le_id = le_id' );
+            $query->andFilterWhere([Listelgr::tableName() . '.elgr_lg_id' => $this->_allgroups]);
         }
 
         // grid filtering conditions

@@ -18,7 +18,7 @@ class ListgroupSearch extends Listgroup
     public function rules()
     {
         return [
-            [['lg_id'], 'integer'],
+            [['lg_id', ], 'integer'],
             [['lg_createtime', 'lg_name'], 'safe'],
         ];
     }

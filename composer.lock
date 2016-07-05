@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "835ccb2ffdb57bf77ff73a8116100715",
-    "content-hash": "722bdda3078c571d6c9f0037b8c49c81",
+    "hash": "9eff2b16f2506f3a27dd0f41b59bd262",
+    "content-hash": "287e5c34391143015f77454563fc21f3",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -298,6 +298,150 @@
                 "html"
             ],
             "time": "2015-08-05 01:03:42"
+        },
+        {
+            "name": "kartik-v/yii2-krajee-base",
+            "version": "1.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-krajee-base.git",
+                "reference": "7f7a45ffe193fe673f72b9effc01b08499f2a454"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/7f7a45ffe193fe673f72b9effc01b08499f2a454",
+                "reference": "7f7a45ffe193fe673f72b9effc01b08499f2a454",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2-bootstrap": "@dev"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\base\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Base library and foundation components for all Yii2 Krajee extensions.",
+            "homepage": "https://github.com/kartik-v/yii2-krajee-base",
+            "keywords": [
+                "base",
+                "extension",
+                "foundation",
+                "krajee",
+                "widget",
+                "yii2"
+            ],
+            "time": "2016-05-07 19:45:52"
+        },
+        {
+            "name": "kartik-v/yii2-widget-select2",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-widget-select2.git",
+                "reference": "5ca33a716188422e85560cdce0cb2110a998a618"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/5ca33a716188422e85560cdce0cb2110a998a618",
+                "reference": "5ca33a716188422e85560cdce0cb2110a998a618",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-krajee-base": "~1.7"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\select2\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Enhanced Yii2 wrapper for the Select2 jQuery plugin (sub repo split from yii2-widgets).",
+            "homepage": "https://github.com/kartik-v/yii2-widget-select2",
+            "keywords": [
+                "dropdown",
+                "extension",
+                "form",
+                "jquery",
+                "plugin",
+                "select2",
+                "widget",
+                "yii2"
+            ],
+            "time": "2016-06-14 13:48:39"
+        },
+        {
+            "name": "mosedu/yii2-multirows",
+            "version": "1.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mosedu/yii2-multirows.git",
+                "reference": "d7fe7eb416c2ca751edea12568ccc2d70ea959de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mosedu/yii2-multirows/zipball/d7fe7eb416c2ca751edea12568ccc2d70ea959de",
+                "reference": "d7fe7eb416c2ca751edea12568ccc2d70ea959de",
+                "shasum": ""
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "mosedu\\multirows\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Victor Kozmin",
+                    "email": "promcalc@gmail.com",
+                    "homepage": "http://zeltorg.ru/"
+                }
+            ],
+            "description": "Widget to dynamicaly add new form rows with model fields and behavior to validate theese models.",
+            "keywords": [
+                "dynamic",
+                "multirows",
+                "widget",
+                "yii2"
+            ],
+            "time": "2016-03-16 10:29:40"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -965,7 +1109,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "kartik-v/yii2-widget-select2": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

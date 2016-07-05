@@ -6,6 +6,8 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use app\models\Listgroup;
+use app\models\Listelgr;
 
 /**
  * This is the model class for table "{{%listelement}}".
@@ -53,8 +55,10 @@ class Listelement extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['le_createtime'], 'safe'],
-            [['_allgroups'], 'in', 'range' => []],
+            [['le_email'], 'required', ],
+            [['le_email'], 'unique', ],
+//            [['le_createtime'], 'safe', ],
+            [['_allgroups'], 'in', 'range' => array_keys(Listgroup::getList()), 'allowArray' => true, ],
             [['le_email', 'le_fam', 'le_name', 'le_otch', 'le_org'], 'string', 'max' => 255],
         ];
     }
@@ -76,8 +80,63 @@ class Listelement extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getGroups() {
-//        return $this->hasMany();
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getElGroups() {
+        return $this->hasMany(
+            Listelgr::className(),
+            ['elgr_le_id' => 'le_id']
+        );
     }
 
+    /**
+     * @return $this
+     */
+    public function getGroups() {
+        return $this
+            ->hasMany(
+                Listgroup::className(),
+                ['lg_id' => 'elgr_lg_id']
+            )
+            ->via('elGroups');
+    }
+
+    /**
+     * @throws \yii\db\Exception
+     */
+    public function saveGroups() {
+        $db = Yii::$app->db;
+
+        // удаляем старые записи
+        $db
+            ->createCommand(
+                'Update ' . Listelgr::tableName() . ' Set elgr_lg_id = 0, elgr_le_id = 0 Where elgr_le_id = :id',
+                [':id' => $this->le_id]
+            )
+            ->execute();
+
+        foreach($this->_allgroups As $grId) {
+            // пробуем изменить пустую запись
+            $nExec = $db
+                ->createCommand(
+                    'Update ' . Listelgr::tableName() . ' Set elgr_lg_id = :gid, elgr_le_id = :id Where elgr_id In (Select elgr_id From ' . Listelgr::tableName() . ' Where elgr_lg_id = 0 And elgr_le_id = 0 Limit 1)',
+                    [
+                        ':id' => $this->le_id,
+                        ':gid' => $grId,
+                    ]
+                )
+                ->execute();
+
+            if( $nExec == 0 ) {
+                // если не было пустой записи, то создаем новую
+                $ogr = new Listelgr();
+                $ogr->elgr_le_id = $this->le_id;
+                $ogr->elgr_lg_id = $grId;
+                if( !$ogr->save() ) {
+                    Yii::error('Error save element groups: ' . print_r($ogr->getErrors(), true) . "\nattributes = " . print_r($ogr->attributes, true));
+                }
+            }
+        }
+    }
 }
