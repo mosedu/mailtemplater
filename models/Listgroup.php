@@ -8,14 +8,13 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
 /**
- * This is the model class for table "{{%mailtempl}}".
+ * This is the model class for table "{{%listgroup}}".
  *
- * @property integer $mt_id
- * @property string $mt_createtime
- * @property string $mt_name
- * @property string $mt_text
+ * @property integer $lg_id
+ * @property string $lg_createtime
+ * @property string $lg_name
  */
-class Mailtempl extends \yii\db\ActiveRecord
+class Listgroup extends \yii\db\ActiveRecord
 {
 
     /**
@@ -26,7 +25,7 @@ class Mailtempl extends \yii\db\ActiveRecord
             [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['mt_createtime'],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['lg_createtime'],
                 ],
                 'value' => ( strtolower($this->db->driverName) != 'sqlite' ) ? new Expression('NOW()') : date('Y-m-d H:i:s'),
             ],
@@ -38,7 +37,7 @@ class Mailtempl extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%mailtempl}}';
+        return '{{%listgroup}}';
     }
 
     /**
@@ -47,9 +46,8 @@ class Mailtempl extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['mt_createtime'], 'safe'],
-            [['mt_text'], 'string'],
-            [['mt_name'], 'string', 'max' => 255],
+            [['lg_createtime'], 'safe'],
+            [['lg_name'], 'string', 'max' => 255],
         ];
     }
 
@@ -59,10 +57,9 @@ class Mailtempl extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'mt_id' => 'ID',
-            'mt_createtime' => 'Создан',
-            'mt_name' => 'Название',
-            'mt_text' => 'Текст',
+            'lg_id' => 'ID',
+            'lg_createtime' => 'Создана',
+            'lg_name' => 'Наименование',
         ];
     }
 }

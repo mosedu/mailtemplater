@@ -9,7 +9,7 @@ $sfWebLocal = __DIR__ . DIRECTORY_SEPARATOR . 'web-local.php';
 $config = [
     'id' => 'frontend',
     'language' => 'ru',
-    'name' => 'mailgate',
+    'name' => 'mailtemplate',
 //    'layout' => 'frontend_cabinet',
 
     'components' => [

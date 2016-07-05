@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\MailtemplSearch */
+/* @var $searchModel app\models\ListgroupSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Шаблоны';
+$this->title = 'Группы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mailtempl-index">
+<div class="listgroup-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Добавить шаблон', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Создать группу', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,10 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
 //            ['class' => 'yii\grid\SerialColumn'],
 
-//            'mt_id',
-//            'mt_createtime',
-            'mt_name',
-            'mt_text:raw',
+//            'lg_id',
+//            'lg_createtime',
+            'lg_name',
 
             [
                 'class' => 'yii\grid\ActionColumn',

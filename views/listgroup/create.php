@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Mailtempl */
+/* @var $model app\models\Listgroup */
 
-$this->title = 'Новый шаблон';
-$this->params['breadcrumbs'][] = ['label' => 'Шаблоны', 'url' => ['index']];
+$this->title = 'Новая группа';
+$this->params['breadcrumbs'][] = ['label' => 'Группы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mailtempl-create">
+<div class="listgroup-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

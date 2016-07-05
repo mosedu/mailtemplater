@@ -3,36 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Mailtempl;
-use app\models\MailtemplSearch;
+use app\models\Listgroup;
+use app\models\ListgroupSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use vova07\imperavi\actions\GetAction;
-use vova07\imperavi\actions\UploadAction;
 
 /**
- * MailtemplController implements the CRUD actions for Mailtempl model.
+ * ListgroupController implements the CRUD actions for Listgroup model.
  */
-class MailtemplController extends Controller
+class ListgroupController extends Controller
 {
-    public function actions()
-    {
-        return [
-            'files-get' => [
-                'class' => GetAction::className(),
-                'url' => 'http://'.$_SERVER['HTTP_HOST'].'/images/', // Directory URL address, where files are stored.
-                'path' => '@webroot/images', // Or absolute path to directory where files are stored.
-                'type' => GetAction::TYPE_FILES,
-            ],
-            'image-upload' => [
-                'class' => UploadAction::className(),
-                'url' => 'http://'.$_SERVER['HTTP_HOST'].'/images/', // Directory URL address, where files are stored.
-                'path' => '@webroot/images' // Or absolute path to directory where files are stored.
-            ],
-        ];
-    }
-
     /**
      * @inheritdoc
      */
@@ -49,12 +30,12 @@ class MailtemplController extends Controller
     }
 
     /**
-     * Lists all Mailtempl models.
+     * Lists all Listgroup models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new MailtemplSearch();
+        $searchModel = new ListgroupSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -64,7 +45,7 @@ class MailtemplController extends Controller
     }
 
     /**
-     * Displays a single Mailtempl model.
+     * Displays a single Listgroup model.
      * @param integer $id
      * @return mixed
      */
@@ -76,26 +57,26 @@ class MailtemplController extends Controller
     }
 
     /**
-     * Creates a new Mailtempl model.
+     * Creates a new Listgroup model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Mailtempl();
+        $model = new Listgroup();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', ]);
-//            return $this->redirect(['view', 'id' => $model->mt_id]);
+//            return $this->redirect(['view', 'id' => $model->lg_id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     /**
-     * Updates an existing Mailtempl model.
+     * Updates an existing Listgroup model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -106,16 +87,16 @@ class MailtemplController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', ]);
-//            return $this->redirect(['view', 'id' => $model->mt_id]);
+//            return $this->redirect(['view', 'id' => $model->lg_id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
-     * Deletes an existing Mailtempl model.
+     * Deletes an existing Listgroup model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -128,15 +109,15 @@ class MailtemplController extends Controller
     }
 
     /**
-     * Finds the Mailtempl model based on its primary key value.
+     * Finds the Listgroup model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Mailtempl the loaded model
+     * @return Listgroup the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Mailtempl::findOne($id)) !== null) {
+        if (($model = Listgroup::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

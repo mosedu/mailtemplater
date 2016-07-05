@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Mailtempl */
+/* @var $model app\models\Listelement */
 
-$this->title = 'Новый шаблон';
-$this->params['breadcrumbs'][] = ['label' => 'Шаблоны', 'url' => ['index']];
+$this->title = 'Создать';
+$this->params['breadcrumbs'][] = ['label' => 'Список рассылки', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mailtempl-create">
+<div class="listelement-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
