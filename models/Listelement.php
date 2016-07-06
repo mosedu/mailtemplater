@@ -139,7 +139,9 @@ class Listelement extends \yii\db\ActiveRecord
             // пробуем изменить пустую запись
             $nExec = $db
                 ->createCommand(
-                    'Update ' . Listelgr::tableName() . ' Set elgr_lg_id = :gid, elgr_le_id = :id Where elgr_id In (Select elgr_id From ' . Listelgr::tableName() . ' Where elgr_lg_id = 0 And elgr_le_id = 0 Limit 1)',
+                    strtolower(Yii::$app->db->driverName) != 'sqlite' ?
+                        ('Update ' . Listelgr::tableName() . ' Set elgr_lg_id = :gid, elgr_le_id = :id Where elgr_lg_id = 0 And elgr_le_id = 0 Limit 1') :
+                        ('Update ' . Listelgr::tableName() . ' Set elgr_lg_id = :gid, elgr_le_id = :id Where elgr_id In (Select elgr_id From ' . Listelgr::tableName() . ' Where elgr_lg_id = 0 And elgr_le_id = 0 Limit 1)'),
                     [
                         ':id' => $this->le_id,
                         ':gid' => $grId,
