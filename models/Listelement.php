@@ -8,6 +8,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use app\models\Listgroup;
 use app\models\Listelgr;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%listelement}}".
@@ -55,7 +56,7 @@ class Listelement extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['le_email'], 'required', ],
+            [['le_email', '_allgroups',], 'required', ],
             [['le_email'], 'unique', ],
 //            [['le_createtime'], 'safe', ],
             [['_allgroups'], 'in', 'range' => array_keys(Listgroup::getList()), 'allowArray' => true, ],
@@ -100,6 +101,24 @@ class Listelement extends \yii\db\ActiveRecord
                 ['lg_id' => 'elgr_lg_id']
             )
             ->via('elGroups');
+    }
+
+    /**
+     * @param bool $bWithFam
+     * @return string
+     */
+    public function getFullname($bWithFam = true) {
+        $s = trim(($bWithFam ? $this->le_fam : '') . ' ' . $this->le_name . ' ' . $this->le_otch);
+        return $s;
+    }
+
+    /**
+     * @param string $sDelim
+     * @return string
+     */
+    public function getUsergroups($sDelim = ', ') {
+        $s = implode($sDelim, ArrayHelper::map($this->groups, 'lg_id', 'lg_name'));
+        return $s;
     }
 
     /**

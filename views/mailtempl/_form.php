@@ -20,19 +20,22 @@ use vova07\imperavi\Widget;
 
     <?= '' // $form->field($model, 'mt_text')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'mt_text')->widget(Widget::className(), [
-        'settings' => [
-            'lang' => 'ru',
-            'minHeight' => 400,
-            'imageManagerJson' => Url::to(['/mailtempl/images-get']),
-            'imageUpload' => Url::to(['/mailtempl/image-upload']),
-            'plugins' => [
-                'clips',
-                'fullscreen',
-                'imagemanager',
-            ],
-        ]
-    ]); ?>
+    <?= $form
+        ->field($model, 'mt_text')
+        ->widget(Widget::className(), [
+            'settings' => [
+                'lang' => 'ru',
+                'minHeight' => 400,
+                'imageManagerJson' => Url::to(['/mailtempl/images-get']),
+                'imageUpload' => Url::to(['/mailtempl/image-upload']),
+                'plugins' => [
+                    'clips',
+                    'fullscreen',
+                    'imagemanager',
+                ],
+            ]
+        ])
+        ->hint('Возможные поля для вставки из списка рассылки: *|email|*, *|fam|*, *|name|*, *|otch|*, *|org|*, *|fullname|*, *|usergroups|*'); ?>
 
     <div class="form-group">
         <?= Html::submitButton(

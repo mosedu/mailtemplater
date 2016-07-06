@@ -55,6 +55,11 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'le_otch',
             // 'le_org',
 
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update}',
+            ],
+
         ],
     ]); ?>
 </div>

@@ -3,9 +3,14 @@
 namespace app\controllers;
 
 use Yii;
+
 use app\models\Mailtempl;
 use app\models\MailtemplSearch;
 use app\models\TemplatesendForm;
+use app\models\ListelementSearch;
+use app\models\Listelement;
+use app\components\MailCreator;
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -157,7 +162,31 @@ class MailtemplController extends Controller
      * @return int
      */
     public function sendMails($template, $model) {
-        return 5;
+        $findModel = new ListelementSearch();
+
+        $dataProvider = $findModel->search([
+            $findModel->formName() => [
+                '_allgroups' => $model->groupid,
+            ]
+        ]);
+        $dataProvider->prepare();
+        $nMaxCount = $dataProvider->pagination->totalCount;
+        $nPageCount = $dataProvider->pagination->pageCount;
+        $aMessages = [];
+        for($page = 0; $page < $nPageCount; $page++) {
+            $dataProvider->pagination->setPage($page);
+            $dataProvider->refresh();
+
+            foreach($dataProvider->getModels() As $oSubscriber) {
+                $aMessages[] = MailCreator::createMail($template, $model, $oSubscriber);
+            }
+        }
+
+        if( count($aMessages) > 0 ) {
+            Yii::$app->mailer->sendMultiple($aMessages);
+        }
+
+        return $nMaxCount;
     }
 
 
