@@ -10,7 +10,8 @@ use yii\helpers\ArrayHelper;
 /* @var $model app\models\Listelement */
 /* @var $form yii\widgets\ActiveForm */
 
-$groupsData = Listgroup::getList();
+$groupsData = array_values(Listgroup::getList());
+$groupsData = array_combine($groupsData, $groupsData);
 
 //$model->_allgroups =
 //    ArrayHelper::map(
@@ -27,6 +28,16 @@ $model->_allgroups = array_keys(
         'lg_name'
     )
 );
+
+$model->_groupslist = array_values(
+    ArrayHelper::map(
+        $model->groups,
+        'lg_id',
+        'lg_name'
+    )
+);
+
+echo nl2br(print_r($model->_groupslist, true));
 
 ?>
 
@@ -52,7 +63,7 @@ $model->_allgroups = array_keys(
             <?= $form->field($model, 'le_org')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-sm-4">
-            <?= $form->field($model, '_allgroups')->widget(Select2::classname(), [
+            <?= '' /* $form->field($model, '_allgroups')->widget(Select2::classname(), [
                 'data' => $groupsData,
                 'language' => 'ru',
                 'theme' => Select2::THEME_BOOTSTRAP,
@@ -62,6 +73,19 @@ $model->_allgroups = array_keys(
                 'pluginOptions' => [
                     'allowClear' => true,
                     'multiple' => true,
+                ],
+            ]) */ ?>
+            <?= $form->field($model, '_groupslist')->widget(Select2::classname(), [
+                'data' => $groupsData,
+                'language' => 'ru',
+                'theme' => Select2::THEME_BOOTSTRAP,
+                'options' => [
+                    'placeholder' => 'Выберите группу',
+                ],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'multiple' => true,
+                    'tags' => true,
                 ],
             ]) ?>
             <?= '' // $form->field($model, '_allgroups')->dropDownList($groupsData, ['multiple' => true,]) ?>

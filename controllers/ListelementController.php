@@ -117,7 +117,8 @@ class ListelementController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->saveGroups();
+//            $model->saveGroups();
+            $model->saveGrouptags();
             return $this->redirect(['index']);
 //            return $this->redirect(['view', 'id' => $model->le_id]);
         } else {

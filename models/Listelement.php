@@ -26,6 +26,7 @@ class Listelement extends \yii\db\ActiveRecord
 {
 
     public $_allgroups;
+    public $_groupslist;
 
     /**
      * @return array
@@ -59,7 +60,8 @@ class Listelement extends \yii\db\ActiveRecord
             [['le_email', '_allgroups',], 'required', ],
             [['le_email'], 'unique', ],
 //            [['le_createtime'], 'safe', ],
-            [['_allgroups'], 'in', 'range' => array_keys(Listgroup::getList()), 'allowArray' => true, ],
+//            [['_allgroups'], 'in', 'range' => array_keys(Listgroup::getList()), 'allowArray' => true, ],
+            [['_groupslist'], 'safe', ],
             [['le_email', 'le_fam', 'le_name', 'le_otch', 'le_org'], 'string', 'max' => 255],
         ];
     }
@@ -78,6 +80,7 @@ class Listelement extends \yii\db\ActiveRecord
             'le_otch' => 'Отчество',
             'le_org' => 'Организация',
             '_allgroups' => 'Группы',
+            '_groupslist' => 'Группы',
         ];
     }
 
@@ -137,6 +140,50 @@ class Listelement extends \yii\db\ActiveRecord
 
         foreach($this->_allgroups As $grId) {
             // пробуем изменить пустую запись
+            $nExec = $db
+                ->createCommand(
+                    strtolower(Yii::$app->db->driverName) != 'sqlite' ?
+                        ('Update ' . Listelgr::tableName() . ' Set elgr_lg_id = :gid, elgr_le_id = :id Where elgr_lg_id = 0 And elgr_le_id = 0 Limit 1') :
+                        ('Update ' . Listelgr::tableName() . ' Set elgr_lg_id = :gid, elgr_le_id = :id Where elgr_id In (Select elgr_id From ' . Listelgr::tableName() . ' Where elgr_lg_id = 0 And elgr_le_id = 0 Limit 1)'),
+                    [
+                        ':id' => $this->le_id,
+                        ':gid' => $grId,
+                    ]
+                )
+                ->execute();
+
+            if( $nExec == 0 ) {
+                // если не было пустой записи, то создаем новую
+                $ogr = new Listelgr();
+                $ogr->elgr_le_id = $this->le_id;
+                $ogr->elgr_lg_id = $grId;
+                if( !$ogr->save() ) {
+                    Yii::error('Error save element groups: ' . print_r($ogr->getErrors(), true) . "\nattributes = " . print_r($ogr->attributes, true));
+                }
+            }
+        }
+    }
+
+    /**
+     * @throws \yii\db\Exception
+     */
+    public function saveGrouptags() {
+
+        $db = Yii::$app->db;
+
+        // удаляем старые записи
+        $db
+            ->createCommand(
+                'Update ' . Listelgr::tableName() . ' Set elgr_lg_id = 0, elgr_le_id = 0 Where elgr_le_id = :id',
+                [':id' => $this->le_id]
+            )
+            ->execute();
+
+        foreach($this->_groupslist As $grName) {
+            // пробуем изменить пустую запись
+
+            $grId = Listgroup::getGroupIdByTiele($grName);
+            Yii::info('Save group: ' . $grName . ' grId = ' . $grId);
             $nExec = $db
                 ->createCommand(
                     strtolower(Yii::$app->db->driverName) != 'sqlite' ?

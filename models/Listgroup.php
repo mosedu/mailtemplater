@@ -77,4 +77,28 @@ class Listgroup extends \yii\db\ActiveRecord
         return self::$_aList;
     }
 
+    /**
+     * @param string $grName
+     * @return integer
+     */
+    public static function getGroupIdByTitle($grName) {
+        $grName = trim($grName);
+        $ob = self::find()->where(['lg_name' => $grName, ])->one();
+        $id = 0;
+        if( $ob === null ) {
+            $ob = new Listgroup();
+            $ob->lg_name = $grName;
+            if( !$ob->save() ) {
+                Yii::error('Error save group in getGroupIdByTitle: ' . print_r($ob->getErrors(), true) . "\nattributes: " . print_r($ob->attributes, true));
+            }
+            else {
+                $id = $ob->lg_id;
+            }
+        }
+        else {
+            $id = $ob->lg_id;
+        }
+        return $id;
+    }
+
 }
