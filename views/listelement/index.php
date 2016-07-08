@@ -58,6 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{view} {update}',
+                'buttonOptions' => ['class' => 'btn btn-success',],
             ],
 
         ],

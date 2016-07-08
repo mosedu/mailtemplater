@@ -57,7 +57,7 @@ class Listelement extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['le_email', '_allgroups',], 'required', ],
+            [['le_email', ], 'required', ], // '_allgroups',
             [['le_email'], 'unique', ],
 //            [['le_createtime'], 'safe', ],
 //            [['_allgroups'], 'in', 'range' => array_keys(Listgroup::getList()), 'allowArray' => true, ],
@@ -182,7 +182,7 @@ class Listelement extends \yii\db\ActiveRecord
         foreach($this->_groupslist As $grName) {
             // пробуем изменить пустую запись
 
-            $grId = Listgroup::getGroupIdByTiele($grName);
+            $grId = Listgroup::getGroupIdByTitle($grName);
             Yii::info('Save group: ' . $grName . ' grId = ' . $grId);
             $nExec = $db
                 ->createCommand(

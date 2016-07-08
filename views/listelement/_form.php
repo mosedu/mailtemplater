@@ -21,14 +21,16 @@ $groupsData = array_combine($groupsData, $groupsData);
 //    )
 //;
 
-$model->_allgroups = array_keys(
-    ArrayHelper::map(
-        $model->groups,
-        'lg_id',
-        'lg_name'
-    )
-);
+//$model->_allgroups = array_keys(
+//    ArrayHelper::map(
+//        $model->groups,
+//        'lg_id',
+//        'lg_name'
+//    )
+//);
 
+// Мы тут это специально делаем, потому что это редкий случай, когда это нужно.
+// Возможно в модели надо сделать метод и здесь его просто вызывать
 $model->_groupslist = array_values(
     ArrayHelper::map(
         $model->groups,
@@ -37,7 +39,7 @@ $model->_groupslist = array_values(
     )
 );
 
-echo nl2br(print_r($model->_groupslist, true));
+//echo nl2br(print_r($model->_groupslist, true));
 
 ?>
 
