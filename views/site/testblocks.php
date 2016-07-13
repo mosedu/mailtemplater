@@ -6,13 +6,16 @@ use yii\helpers\Html;
 use yii\web\View;
 use yii\bootstrap\Tabs;
 use app\assets\EdittemplateAsset;
+use yii\jui\JuiAsset;
 
 $this->title = 'Редактирование шаблона';
 $this->params['breadcrumbs'][] = $this->title;
 
 EdittemplateAsset::register($this);
+JuiAsset::register($this);
+
 $sBlock1 = <<<EOT
-<div class="" style="width: 100%; border: 1px solid #999999;">
+<div class="block-container" style="width: 100%; border: 1px solid #999999;">
     <table>
         <tr>
             <td style="width: 30%; vertical-align: top;">
@@ -53,7 +56,7 @@ $sBlock1 = <<<EOT
 EOT;
 
 $sBlock2 = <<<EOT
-<div class="" style="width: 100%; border: 1px solid #999999;">
+<div class="block-container" style="width: 100%; border: 1px solid #999999;">
     <div class="image-block" style="width: 100%;">
         <img src="/tmp-local/no-image.png" />
     </div>
@@ -64,7 +67,7 @@ $sBlock2 = <<<EOT
 EOT;
 
 $sBlock3 = <<<EOT
-<div class="" style="width: 100%; border: 1px solid #999999;">
+<div class="block-container" style="width: 100%; border: 1px solid #999999;">
     <div class="image-block" style="width: 100%;">
         <img src="/tmp-local/no-image.png" style="width: 50%;" />
     </div>
@@ -91,7 +94,14 @@ EOT;
 </div>
 */
 $sJs = <<<EOT
-jQuery("#templatearea").templateeditor();
+jQuery("#templatearea")
+    .templateeditor(
+        {
+            blockcontainer: ".block-container",
+            blocksarea: "#block-area",
+            blockselector: ".block-element"
+        }
+    );
 EOT;
 
 $this->registerJs($sJs, View::POS_READY);
@@ -107,20 +117,38 @@ $sHtml = <<<EOT
 
 EOT;
 
+$aBlocks = compact('sBlock1', 'sBlock2', 'sBlock3');
+//echo nl2br(print_r($aBlocks, true));
+$sBlocks = array_reduce(
+    $aBlocks,
+    function($carry, $el) {
+        $carry .= '<div class="col-md-6"><div class="block-element">'.$el.'</div></div>';
+        return $carry;
+    },
+    ''
+);
 
 ?>
 
 <div class="template-editor">
     <div class="row">
-        <div class="col-xs-8" id="templatearea"><?= $sHtml ?></div>
-        <div class="col-xs-4">
+        <div class="col-md-8">
+            <div>Шаблон для редактирования:</div>
+            <div id="templatearea" style="min-height: 100px; border: 1px solid #cccccc; width: 600px;"></div>
+            <?= '' // $sHtml ?>
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-md-4">
             <?php
             echo Tabs::widget([
                 'items' => [
                     [
                         'label' => 'Блоки',
-                        'content' => 'Тут список блоков для перетаскивания',
-                        'active' => true
+                        'content' => '<div class="col-md-12">Тут список блоков для перетаскивания</div>' . $sBlocks,
+                        'active' => true,
+                        'options' => [
+                            'id' => 'block-area',
+                        ],
                     ],
                     [
                         'label' => 'Редактор',

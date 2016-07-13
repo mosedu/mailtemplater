@@ -1,85 +1,24 @@
-/*
-var onOver = function(event) {
-//    console.log("mouseover");
-//    console.log(event);
-    var ob = jQuery(this),
-        oParent = ob.parent(),
-        sStyle = "";
-    if( ob.hasClass("image-block") ) {
-        var oImg = ob.find("img:first");
-        if( oImg.length > 0 ) {
-            var pos = oImg.position();
-            sStyle = "width: "+oImg.width()+"px; height: "+oImg.height()+"px; top: "+pos.top+"px; left: "+pos.left+"px;";
-//            console.log('Image ' + oImg.width() + " * " + oImg.height() + " : " + sStyle);
-        }
-        else {
-            var pos = ob.position();
-            ob.append('<img src="/tmp-local/no-image.png" />');
-            sStyle = "width: "+ob.width()+"px; height: "+ob.height()+"px; top: 0; left: 0;";
-        }
-    }
-    else {
-//        console.log('Text');
-        sStyle = "width: "+ob.width()+"px; height: "+ob.height()+"px; top: 0; left: 0;";
-    }
-
-    if( sStyle != "" ) {
-        ob.append('<div class="border" style="'+sStyle+'" />');
-    }
-};
-
-var onOut = function(event) {
-//    console.log("mouseout");
-//    console.log(event);
-//    console.log(jQuery(this));
-    var ob = jQuery(this),
-        oParent = ob.parent();
-    ob.find(".border").remove();
-};
-
-jQuery('.text-block')
-    .on(
-    'mouseenter',
-    onOver
-)
-    .on(
-    'mouseleave',
-    onOut
-);
-
-jQuery('.image-block')
-    .on(
-    'mouseenter',
-    onOver
-)
-    .on(
-    'mouseleave',
-    onOut
-);
-
-
-jQuery('.site-about div').each(
-    function(index, el) {
-        var ob = jQuery(this),
-            sStyle = ob.attr("style");
-        console.log(sStyle + " = ", ob.css("width"));
-    }
-);
-*/
-
+/**
+ *
+ * Плагин для редактирования шаблонов письма
+ *
+ */
 (function ($) {
     var pluginName = "templateeditor";
     $.fn[pluginName] = function (method) {
 
         var defaults = {
                 imageblockselector: '.image-block',
-                textblockselector: '.text-block'
+                textblockselector: '.text-block',
+                blockcontainer: "",
+                blocksarea: "",
+                blockselector: ""
             },
             oCurrent = null, // текущий выбраный блок, выбирается при клике на нем
             oTemplate = null; // наш элемент с шаблоном, чтобы не искать его в функциях
 
         var bindSelectEvents = function(el) {
-            var oSetting = el[pluginName]("settings"),
+            var oSetting = oTemplate[pluginName]("settings"),
                 aSelectors = [
                     "imageblockselector",
                     "textblockselector"
@@ -105,7 +44,7 @@ jQuery('.site-about div').each(
         };
 
         var unbindSelectEvents = function(el) {
-            var oSetting = el.setting("settings");
+            var oSetting = oTemplate[pluginName]("settings");
             //console.log("unbindSelectEvents(): ", oSetting);
             aSelectors = [
                 "imageblockselector",
@@ -213,6 +152,24 @@ jQuery('.site-about div').each(
             }
         };
 
+        /**
+         * Получение размеров изображения
+         *
+         * @param imgSrc
+         * @param loadFunction
+         */
+        function getImgSize(imgSrc, loadFunction) {
+            var newImg = new Image();
+
+            newImg.onload = function() {
+                var height = newImg.height;
+                var width = newImg.width;
+                loadFunction(width, height);
+            };
+
+            newImg.src = imgSrc;
+        }
+
         var methods = {
             init: function (options) {
                 return this.each(function () {
@@ -230,6 +187,38 @@ jQuery('.site-about div').each(
                     });
 
                     bindSelectEvents(elArea);
+
+                    if( (settings.blocksarea != "") && (settings.blockselector != "") ) {
+                        var sDragSelector = settings.blocksarea + " " + settings.blockselector;
+                        jQuery(sDragSelector)
+                            .draggable({
+                                helper: "clone",
+                                //drag: function( event, ui ) {
+                                //    console.log("drag", ui.offset, ui.position);
+                                //}
+                            });
+
+                        elArea.droppable({
+                            accept: sDragSelector,
+                            tolerance: "pointer",
+                            //classes: {
+                            //    "ui-droppable-active": "ui-state-highlight"
+                            //},
+                            drop: function( event, ui ) {
+                                var oNew = ui.draggable.clone();
+                                bindSelectEvents(oNew);
+                                elArea.append(oNew);
+                                var pos = ui.draggable.offset(), dPos = $(this).offset();
+                                console.log(
+                                    "Top: " + (pos.top - dPos.top) +
+                                    ", Left: " + (pos.left - dPos.left)
+                                );
+                            },
+                            over: function( event, ui ) {
+                                console.log("over", ui.offset, ui.position);
+                            }
+                        });
+                    }
                 });
             },
 
