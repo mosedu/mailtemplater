@@ -57,7 +57,7 @@ class Listelement extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['le_email', ], 'required', ], // '_allgroups',
+            [['le_email', '_groupslist', ], 'required', ], // '_allgroups',
             [['le_email'], 'unique', ],
 //            [['le_createtime'], 'safe', ],
 //            [['_allgroups'], 'in', 'range' => array_keys(Listgroup::getList()), 'allowArray' => true, ],

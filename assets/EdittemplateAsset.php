@@ -13,18 +13,20 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class AppAsset extends AssetBundle
+class EdittemplateAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $sourcePath = '@app/assets';
+
     public $css = [
-        'css/site.css',
+        'js/edittemplate.css',
     ];
+
     public $js = [
+        'js/edittemplate.js',
     ];
+
     public $depends = [
-        'yii\web\YiiAsset',
-//        'yii\bootstrap\BootstrapAsset',
+        'app\assets\AppAsset',
         'yii\bootstrap\BootstrapThemeAsset',
     ];
 }

@@ -28,6 +28,9 @@ $configComm = [
             'tablePrefix' => 'mtpl_',
             'enableSchemaCache' => true,
             'schemaCacheDuration' => 24 * 3600,
+            'on afterOpen' => function($event) {
+                $event->sender->createCommand("PRAGMA case_sensitive_like=OFF")->execute();
+            }
         ],
 
 //        'authManager' => [

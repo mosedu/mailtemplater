@@ -17,7 +17,7 @@ class m160705_111945_add_list_tables extends Migration
         $this->createTable('{{%listgroup}}', [
             'lg_id' => Schema::TYPE_PK . ($b ? ' Comment \'Id\'' : ''),
             'lg_createtime' => Schema::TYPE_DATETIME . ($b ? ' Comment \'Создан\'' : ''),
-            'lg_name' => Schema::TYPE_STRING . ($b ? ' Comment \'Наименование\'' : ''),
+            'lg_name' => Schema::TYPE_STRING . ($b ? ' Comment \'Наименование\'' : ' COLLATE NOCASE'),
         ], $tableOptionsMyISAM);
 
         $this->createIndex('idx_lg_name', '{{%listgroup}}', 'lg_name');

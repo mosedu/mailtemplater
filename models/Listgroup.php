@@ -48,9 +48,10 @@ class Listgroup extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['lg_createtime'], 'safe'],
+//            [['lg_createtime'], 'safe'],
+            [['lg_name'], 'required', ],
             [['lg_name'], 'unique', ],
-            [['lg_name'], 'string', 'max' => 255],
+            [['lg_name'], 'string', 'min' => 2, 'max' => 255],
         ];
     }
 

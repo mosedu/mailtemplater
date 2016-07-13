@@ -1,0 +1,25 @@
+
+.image-block, .text-block {
+    position: relative;
+}
+
+.image-block {
+    text-align: center;
+}
+
+.image-block img {
+    width: 100%;
+    background-color: #dddddd;
+}
+
+.over-block-border {
+    border: 2px solid #dd0000;
+    background-color: transparent;
+    position: absolute;
+}
+
+.current-block-border {
+    border: 2px solid #00dd00;
+    background-color: transparent;
+    position: absolute;
+}
