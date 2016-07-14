@@ -58,15 +58,31 @@ class MailtemplController extends Controller
      * Lists all Mailtempl models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionList()
     {
         $searchModel = new MailtemplSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        return $this->render('list', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    /**
+     * Lists all Mailtempl models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        return $this->actionList();
+//        $searchModel = new MailtemplSearch();
+//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//
+//        return $this->render('index', [
+//            'searchModel' => $searchModel,
+//            'dataProvider' => $dataProvider,
+//        ]);
     }
 
     /**
@@ -76,8 +92,16 @@ class MailtemplController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        if( Yii::$app->request->isAjax ) {
+            return $this->renderPartial('view', [
+                'model' => $model,
+                'onlytemplate' => true,
+            ]);
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 
@@ -112,6 +136,25 @@ class MailtemplController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', ]);
+//            return $this->redirect(['view', 'id' => $model->mt_id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     *
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionCreatemail($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['list', ]);
 //            return $this->redirect(['view', 'id' => $model->mt_id]);
         }
 

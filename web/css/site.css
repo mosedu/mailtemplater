@@ -89,3 +89,27 @@ a.desc:after {
     padding: 10px 20px;
     margin: 0 0 15px 0;
 }
+
+.template-preview-html {
+    height: 240px;
+    overflow: hidden;
+    font-size: 0.2em;
+    border: 1px solid #dddddd;
+}
+
+.template-preview-html a {
+    text-decoration: none;
+    color: #444444;
+}
+
+
+.template-preview-html img {
+    width: 100%;
+}
+
+.template-preview-buttons {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #dddddd;
+}

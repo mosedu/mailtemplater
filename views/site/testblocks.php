@@ -13,7 +13,49 @@ $this->params['breadcrumbs'][] = $this->title;
 
 EdittemplateAsset::register($this);
 JuiAsset::register($this);
+/*
+<div style="width: 480px;">
+<div class="block-container" style="width: 100%; border: 1px solid #999999;">
+    <table>
+        <tr>
+            <td style="width: 30%; vertical-align: top;">
+                <div class="image-block">
+                    <img src="/tmp-local/no-image.png" />
+                </div>
+            </td>
+            <td style="width: 5%;"></td>
+            <td style="width: 30%; vertical-align: top;" rowspan="2">
+                <div class="text-block">
+                    <p>Some text for text block.</p>
+                </div>
+            </td>
+            <td style="width: 5%;"></td>
+            <td style="width: 30%; vertical-align: top;">
+                <div class="image-block">
+                    <img src="/tmp-local/no-image.gif" />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%; vertical-align: top;">
+                <div class="text-block">
+                    <p>Image title.</p>
+                </div>
+            </td>
+            <td style="width: 5%;"></td>
+            <td style="width: 5%;"></td>
+            <td style="width: 30%; vertical-align: top;">
+                <div class="text-block">
+                    <p style="text-align: center; font-weight: bold; font-size: 1.2em;">Image title.</p>
+                    <p>Image text.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
 
+*/
 $sBlock1 = <<<EOT
 <div class="block-container" style="width: 100%; border: 1px solid #999999;">
     <table>
@@ -134,7 +176,7 @@ $sBlocks = array_reduce(
     <div class="row">
         <div class="col-md-8">
             <div>Шаблон для редактирования:</div>
-            <div id="templatearea" style="min-height: 100px; border: 1px solid #cccccc; width: 600px;"></div>
+            <div id="templatearea" style="min-height: 100px; border: 1px solid #cccccc; width: 600px; padding: 20px;"></div>
             <?= '' // $sHtml ?>
             <div class="clearfix"></div>
         </div>

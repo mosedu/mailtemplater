@@ -28,6 +28,8 @@ use vova07\imperavi\Widget;
                 'minHeight' => 400,
                 'imageManagerJson' => Url::to(['/mailtempl/images-get']),
                 'imageUpload' => Url::to(['/mailtempl/image-upload']),
+//                'pasteBlockTags' => ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'tbody', 'thead', 'tfoot', 'th', 'tr', 'td', 'ul', 'ol', 'li', 'blockquote', 'pre', 'div',],
+                'replaceDivs' => false,
                 'plugins' => [
                     'clips',
                     'fullscreen',

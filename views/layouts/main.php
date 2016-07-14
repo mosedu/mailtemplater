@@ -9,6 +9,8 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\components\Alert;
+use yii\bootstrap\Modal;
+use yii\web\View;
 
 AppAsset::register($this);
 ?>
@@ -77,6 +79,44 @@ AppAsset::register($this);
     </div>
 </footer>
 
+<?php
+
+Modal::begin([
+    'header' => '<span></span>',
+    'id' => 'messagedata',
+    'size' => Modal::SIZE_LARGE,
+]);
+Modal::end();
+
+$sJs =  <<<EOT
+    var params = {};
+
+    params[jQuery('meta[name=csrf-param]').prop('content')] = jQuery('meta[name=csrf-token]').prop('content');
+
+jQuery('.showinmodal').on("click", function (event){
+    event.preventDefault();
+
+    var ob = jQuery('#messagedata'),
+        oBody = ob.find('.modal-body'),
+        oLink = $(this);
+
+    oBody.text("");
+    oBody.load(
+        oLink.attr('href'),
+        params,
+        function(){
+            ob.find('.modal-header span').text(oLink.attr('title'));
+            ob.modal('show');
+        }
+    );
+    return false;
+});
+
+EOT;
+
+
+$this->registerJs($sJs, View::POS_READY, 'showmodalmessage');
+?>
 <?php $this->endBody() ?>
 </body>
 </html>

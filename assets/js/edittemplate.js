@@ -8,6 +8,8 @@
     $.fn[pluginName] = function (method) {
 
         var defaults = {
+                ontextselect: null,
+                sourcefield: "",
                 imageblockselector: '.image-block',
                 textblockselector: '.text-block',
                 blockcontainer: "",
@@ -82,6 +84,10 @@
                 }
             }
             else {
+                console.log("Select text");
+                if( oSetting.ontextselect !== null ) {
+                    oSetting.ontextselect(ob.html());
+                }
             }
 
             setCurrentBlock(ob);
@@ -186,13 +192,17 @@
                         settings: settings
                     });
 
+                    if(  settings.sourcefield != "") {
+                        elArea.html(jQuery(settings.sourcefield).val());
+                    }
+
                     bindSelectEvents(elArea);
 
                     if( (settings.blocksarea != "") && (settings.blockselector != "") ) {
                         var sDragSelector = settings.blocksarea + " " + settings.blockselector;
                         jQuery(sDragSelector)
                             .draggable({
-                                helper: "clone",
+                                helper: "clone"
                                 //drag: function( event, ui ) {
                                 //    console.log("drag", ui.offset, ui.position);
                                 //}
@@ -229,6 +239,10 @@
 
             data: function () {
                 return this.data(pluginName);
+            },
+
+            updatetext: function (stext) {
+                console.log("Upadtetext: " + stext);
             },
 
             settings: function (setname) {
