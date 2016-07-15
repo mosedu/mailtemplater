@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 $this->title = $model->isNewRecord ? 'Новая рассылка' : 'Изменение рассылки: ' . $model->let_subject . ' (' . date('d.m.Y H:i', strtotime($model->let_createtime)) . ')';
 $this->params['breadcrumbs'][] = ['label' => 'Расылки', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->let_subject, 'url' => ['view', 'id' => $model->let_id]];
+//$this->params['breadcrumbs'][] = ['label' => $model->let_subject, 'url' => ['view', 'id' => $model->let_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="letter-update">

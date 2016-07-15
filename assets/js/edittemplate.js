@@ -4,7 +4,10 @@
  *
  */
 (function ($) {
-    var pluginName = "templateeditor";
+    var pluginName = "templateeditor",
+        oTemplate = null, // наш элемент с шаблоном, чтобы не искать его в функциях
+        oCurrent = null; // текущий выбранный блок, выбирается при клике на нем
+
     $.fn[pluginName] = function (method) {
 
         var defaults = {
@@ -15,9 +18,7 @@
                 blockcontainer: "",
                 blocksarea: "",
                 blockselector: ""
-            },
-            oCurrent = null, // текущий выбраный блок, выбирается при клике на нем
-            oTemplate = null; // наш элемент с шаблоном, чтобы не искать его в функциях
+            };
 
         var bindSelectEvents = function(el) {
             var oSetting = oTemplate[pluginName]("settings"),
@@ -52,7 +53,7 @@
                 "imageblockselector",
                 "textblockselector"
             ];
-            console.log("bindSelectEvents(): ", oSetting);
+            //console.log("unbindSelectEvents(): ", oSetting);
             for(var i = 0; i < aSelectors.length; i++) {
                 var sSelector = aSelectors[i];
                 el
@@ -77,20 +78,78 @@
             var ob = jQuery(this),
                 oSetting = oTemplate[pluginName]("settings");
 
-            if( ob.hasClass(oSetting.imageblockselector) ) {
+            var bSelected = setCurrentBlock(ob);
+
+            if( isBlockImage(ob) ) { // .hasClass(oSetting.imageblockselector) ) {
                 var oImg = getBlockImage(ob);
                 if( oImg.length == 0 ) {
                     ob.append('<img src="/tmp-local/no-image.png" />');
                 }
             }
             else {
-                console.log("Select text");
+                //console.log("Select text");
                 if( oSetting.ontextselect !== null ) {
-                    oSetting.ontextselect(ob.html());
+                    oSetting.ontextselect(ob, bSelected);
                 }
             }
 
-            setCurrentBlock(ob);
+        };
+
+        /**
+         * Текущий блок - текстовый?
+         *
+         * @returns object
+         */
+        var isBlockText = function(ob) {
+            var oSetting = oTemplate[pluginName]("settings"),
+                sSelector = oSetting.textblockselector;
+
+            sSelector = sSelector.replace('.', '');
+            ob = ob || getCurrentBlock();
+
+            return (ob !== null) && ob.hasClass(sSelector);
+        };
+
+        /**
+         * Текущий блок - картиночный?
+         *
+         * @returns object
+         */
+        var isBlockImage = function(ob) {
+            var oSetting = oTemplate[pluginName]("settings"),
+                sSelector = oSetting.imageblockselector;
+            sSelector = sSelector.replace('.', '');
+
+            ob = ob || getCurrentBlock();
+
+            return (ob !== null) && ob.hasClass(sSelector);
+        };
+
+        /**
+         * Перенос html в поле ввода, откуда этот html брали
+         */
+        var setDataToSourceField = function() {
+            var oSetting = oTemplate[pluginName]("settings");
+
+            if( oSetting.sourcefield != "") {
+                var ob = oTemplate.clone();
+                ob.find(".current-block-border").remove();
+                ob.find(".over-block-border").remove();
+                jQuery(oSetting.sourcefield).val(ob.html());
+            }
+        };
+
+        /**
+         * Получение html из поля ввода
+         */
+        var getDataFromSourceField = function() {
+            var oSetting = oTemplate[pluginName]("settings"),
+                s = "";
+
+            if(  oSetting.sourcefield != "") {
+                s = jQuery(oSetting.sourcefield).val();
+            }
+            return s;
         };
 
         /**
@@ -109,6 +168,7 @@
          * @param oBlock
          */
         var setCurrentBlock = function(oBlock) {
+            var bSelected = true;
             clearBlockBorder(oCurrent, "current-block-border");
 
             if( ! oBlock.is(oCurrent) ) {
@@ -117,8 +177,48 @@
             }
             else {
                 oCurrent = null;
+                bSelected = false;
             }
 
+            //console.log('setCurrentBlock() bSelected = ' + (bSelected ? 'true' : 'false'));
+            //console.log('setCurrentBlock() oCurrent = ', oCurrent);
+            //console.log('setCurrentBlock() return oCurrent = ', getCurrentBlock());
+
+            return bSelected;
+        };
+
+        /**
+         * Получаем текущий блок
+         *
+         * @returns object
+         */
+        var getCurrentBlock = function() {
+            //console.log("getCurrentBlock() : ", oCurrent);
+            return oCurrent;
+        };
+
+        /**
+         * Перерисовка границ блока
+         *
+         * @param oBlock
+         */
+        var refreshBlockBorder = function(oBlock) {
+            if( oBlock === null ) {
+                return;
+            }
+
+            var a = [
+                "current-block-border",
+                "over-block-border"
+            ];
+
+            for(var i = 0; i < a.length; i++) {
+                var sClass = a[i],
+                    oBorder = oBlock.find("." + sClass);
+                if( oBorder.length > 0 ) {
+                    setBlockBorder(oBlock, sClass);
+                }
+            }
         };
 
         /**
@@ -127,12 +227,11 @@
          * @param oBlock
          */
         var setBlockBorder = function(oBlock, sClass) {
-            var sStyle = "",
-                oSetting = oTemplate[pluginName]("settings");
+            var sStyle = "";
             sClass = sClass || "overblockborder";
 
-            if( oBlock.hasClass(oSetting.imageblockselector) ) {
-                var oImg = getBlockImage(ob),
+            if( isBlockImage(oBlock) ) { //.hasClass(oSetting.imageblockselector) ) {
+                var oImg = getBlockImage(oBlock),
                     pos = oImg.position();
 
                 sStyle = "width: "+oImg.width()+"px; height: "+oImg.height()+"px; top: "+pos.top+"px; left: "+pos.left+"px;";
@@ -142,6 +241,7 @@
             }
 
             if( sStyle != "" ) {
+                oBlock.find("."+sClass).remove();
                 oBlock.append('<div class="'+sClass+'" style="'+sStyle+'" />');
             }
         };
@@ -192,9 +292,10 @@
                         settings: settings
                     });
 
-                    if(  settings.sourcefield != "") {
-                        elArea.html(jQuery(settings.sourcefield).val());
-                    }
+                    //if(  settings.sourcefield != "") {
+                    //    elArea.html(jQuery(settings.sourcefield).val());
+                    //}
+                    elArea.html(getDataFromSourceField());
 
                     bindSelectEvents(elArea);
 
@@ -241,8 +342,46 @@
                 return this.data(pluginName);
             },
 
-            updatetext: function (stext) {
-                console.log("Upadtetext: " + stext);
+            getBlockData: function () {
+                var oCur = getCurrentBlock();
+                //console.log('getBlockData oCurrent = ', oCur, oCurrent);
+                if( oCur === null ) {
+                    return "";
+                }
+
+                if( isBlockImage(oCur) ) {
+                    var oImg = getBlockImage(oCur);
+                    return oImg.attr("src");
+                }
+                else {
+                    var oTmp = oCur.clone();
+                    oTmp.find(".over-block-border").remove();
+                    oTmp.find(".current-block-border").remove();
+                    return oTmp.html();
+                }
+            },
+
+            setBlockData: function (sData) {
+                var oCur = getCurrentBlock();
+
+                if( oCur === null ) {
+                    return;
+                }
+
+                if( isBlockImage(oCur) ) {
+                    //console.log("setBlockData() : image block");
+                    var oImg = getBlockImage(oCurrent);
+                    oImg.attr("src", sData);
+                }
+                else if( isBlockText(oCur) ) {
+                    //console.log("setBlockData() : text block");
+                    var oTmp = oCur.clone();
+                    oCur.html(sData);
+                    oTmp.find(".current-block-border").appendTo(oCur);
+                }
+
+                setDataToSourceField();
+                refreshBlockBorder(oCur);
             },
 
             settings: function (setname) {

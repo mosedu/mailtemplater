@@ -54,7 +54,7 @@ $sHtml = preg_replace('|<a[^>]+?>([^<]*?)</a>|', '\\1', $sHtml); // 'font-size: 
             <?= Html::a(
                 '<span class="glyphicon glyphicon-envelope"></span>',
                 [
-                    'letter/createmail',
+                    'letter/create',
                     'templateid' => $model->mt_id,
                 ],
                 [

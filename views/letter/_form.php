@@ -12,15 +12,71 @@ use vova07\imperavi\Widget;
 
 $sTextId = Html::getInputId($model, 'let_text');
 $sJs = <<<EOT
-jQuery("#templatearea")
+var obArea = jQuery("#templatearea");
+var oTextEditField = jQuery("#text-block-field")
+var oImageEditField = jQuery("#image-block-field")
+var textArea = jQuery("#text-edit-group");
+var imageArea = jQuery("#image-edit-group");
+
+oTextEditField
+    .redactor({
+        replaceDivs: false,
+        lang: "ru",
+        changeCallback: function() {
+            obArea.templateeditor('setBlockData', this.code.get());
+        }
+    });
+
+oImageEditField
+    .redactor({
+        replaceDivs: false,
+        lang: "ru",
+        imageUpload: ''
+        changeCallback: function() {
+            obArea.templateeditor('setBlockData', this.code.get());
+        }
+    });
+
+obArea
     .templateeditor(
         {
-            ontextselect: function(shtml) {
-                console.log('ontextselect: ' + shtml);
-                jQuery("#text-block-field")
-//                    .redactor('destroy')
-                    .html(shtml)
-                    .redactor();
+            ontextselect: function(obText, isSelected) {
+                var oRedactor = oTextEditField.parent(),
+                    isRedactorExists = oRedactor.hasClass("redactor-box");
+
+                if( isRedactorExists || !isSelected ) {
+                    // тут мы убиваем редактор, так как не нашел способа это сделать по-другому
+                    oTextEditField.redactor('code.set', '');
+//                    var oBlock = isRedactorExists ? oRedactor.parent() : oRedactor;
+//
+//                    oTextArea = oTextArea.clone();
+//                    if( isRedactorExists ) {
+//                        oRedactor.remove();
+//                        jQuery(".redactor-toolbar-tooltip").remove();
+//                    }
+//
+//                    oBlock.append(oTextArea);
+//                    oTextArea
+//                        .html("")
+//                        .show();
+                }
+
+                if( isSelected ) {
+                    textArea.show();
+                    oTextEditField.redactor('code.set', obArea.templateeditor('getBlockData'));
+//                    oTextArea
+//                        .html(obArea.templateeditor('getBlockData'))
+//                        .redactor({
+//                            replaceDivs: false,
+//                            lang: "ru",
+//                            changeCallback: function() {
+//                                obArea.templateeditor('setBlockData', this.code.get());
+//                            }
+//                        });
+                }
+                else {
+                    textArea.hide();
+                }
             },
             sourcefield: "#{$sTextId}",
             textblockfield: "#text-block-field"
@@ -35,14 +91,14 @@ $this->registerJs($sJs, View::POS_READY);
 
 EdittemplateAsset::register($this);
 
-\vova07\imperavi\Asset::register($this);
+$asset = \vova07\imperavi\Asset::register($this);
+$asset->language = 'ru';
 
 ?>
 
 <div class="letter-form">
     <div class="row">
     <div class="col-md-8">
-        <div>Шаблон для редактирования:</div>
         <?php $form = ActiveForm::begin(); ?>
         <?= $form->field($model, 'let_subject')->textInput() ?>
         <div style="display: none;">
@@ -59,7 +115,21 @@ EdittemplateAsset::register($this);
         <div class="clearfix"></div>
     </div>
     <div class="col-md-4">
-        <?= Html::textarea('textblock', '', ['id' => 'text-block-field']) ?>
+        <div class="form-group" id="text-edit-group" style="display: none;">
+            <label class="control-label" for="letter-let_subject">Изменение текста</label>
+            <div class="clearfix"></div>
+            <?= Html::textarea('textblock', '', ['id' => 'text-block-field']) ?>
+            <div class="help-block"></div>
+        </div>
+
+        <div class="form-group" id="image-edit-group" style="display: none;">
+            <label class="control-label" for="letter-let_subject">Изменение картинки</label>
+            <div class="clearfix"></div>
+            <?= Html::a('Выбрать', '#', ['id' => 'image-select-link']) ?>
+            <div class="clearfix"></div>
+            <?= Html::textarea('imageblock', '', ['id' => 'image-block-field']) ?>
+            <div class="help-block"></div>
+        </div>
     </div>
     </div>
 

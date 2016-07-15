@@ -19,7 +19,7 @@ class LetterSearch extends Letter
     {
         return [
             [['let_id', 'let_mt_id', 'let_us_id', 'let_send_id', 'let_state', 'let_send_num'], 'integer'],
-            [['let_createtime', 'let_sendtime', 'let_text'], 'safe'],
+            [['let_createtime', 'let_sendtime', 'let_text', 'let_subject',], 'safe'],
         ];
     }
 
@@ -70,6 +70,7 @@ class LetterSearch extends Letter
         ]);
 
         $query->andFilterWhere(['like', 'let_text', $this->let_text]);
+        $query->andFilterWhere(['like', 'let_subject', $this->let_subject]);
 
         return $dataProvider;
     }
