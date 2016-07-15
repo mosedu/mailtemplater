@@ -31,7 +31,8 @@ oImageEditField
     .redactor({
         replaceDivs: false,
         lang: "ru",
-        imageUpload: ''
+        imageManagerJson: "/mailtempl/images-get",
+        imageUpload: "/mailtempl/image-upload",
         changeCallback: function() {
             obArea.templateeditor('setBlockData', this.code.get());
         }
@@ -60,6 +61,7 @@ obArea
 //                        .html("")
 //                        .show();
                 }
+                imageArea.hide();
 
                 if( isSelected ) {
                     textArea.show();
@@ -76,6 +78,19 @@ obArea
                 }
                 else {
                     textArea.hide();
+                }
+            },
+
+            onimageselect: function(obImage, isSelected) {
+                oImageEditField.redactor('code.set', '');
+                textArea.hide();
+
+                if( isSelected ) {
+                    imageArea.show();
+                    oImageEditField.redactor('code.set', obArea.templateeditor('getBlockData'));
+                }
+                else {
+                    imageArea.hide();
                 }
             },
             sourcefield: "#{$sTextId}",

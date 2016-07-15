@@ -12,6 +12,7 @@
 
         var defaults = {
                 ontextselect: null,
+                onimageselect: null,
                 sourcefield: "",
                 imageblockselector: '.image-block',
                 textblockselector: '.text-block',
@@ -81,6 +82,9 @@
             var bSelected = setCurrentBlock(ob);
 
             if( isBlockImage(ob) ) { // .hasClass(oSetting.imageblockselector) ) {
+                if( oSetting.onimageselect !== null ) {
+                    oSetting.onimageselect(ob, bSelected);
+                }
                 var oImg = getBlockImage(ob);
                 if( oImg.length == 0 ) {
                     ob.append('<img src="/tmp-local/no-image.png" />');
@@ -370,8 +374,10 @@
 
                 if( isBlockImage(oCur) ) {
                     //console.log("setBlockData() : image block");
-                    var oImg = getBlockImage(oCurrent);
-                    oImg.attr("src", sData);
+                    var oImg = getBlockImage(oCurrent),
+                        ob = jQuery(sData);
+
+                    oImg.attr("src", ob.text());
                 }
                 else if( isBlockText(oCur) ) {
                     //console.log("setBlockData() : text block");
