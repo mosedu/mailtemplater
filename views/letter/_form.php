@@ -131,15 +131,10 @@ obArea
 var changeToolsPosition = function() {
     var offsetPreview = oLetterPreview.offset(),
         offsetTools = oLetterTools.offset(),
-        nTop = jQuery(document).scrollTop(),
+        nTop = jQuery(document).scrollTop(), // TODO: тут надо брать текущий выбранный элемент и его смещение сверху, а то после ресайза окна фигня получается
         nMenuBarHeigth = jQuery("#w1").height();
 
-        console.log("offsetPreview = ", offsetPreview);
-        console.log("offsetTools = ", offsetTools);
-        console.log("nTop  = ", nTop);
-
         if( offsetPreview.top == offsetTools.top ) {
-            console.log("Can move tools");
             if( nTop > 0 ) {
                 oLetterTools.css('padding-top', nTop - offsetPreview.top + nMenuBarHeigth);
             }
@@ -155,9 +150,8 @@ var changeToolsPosition = function() {
 
 };
 
-//var setScrollEvents = function(event) {
-//    jQuery(window).on("scroll", function(event){ changeToolsPosition(); });
-//};
+jQuery(window).on("resize", function(event){ changeToolsPosition(); });
+
 EOT;
 
 $this->registerJs($sJs, View::POS_READY);

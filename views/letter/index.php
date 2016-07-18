@@ -55,9 +55,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update}', //  {delete}
+                'template' => '{view} {update} {prepare}', //  {delete}
                 'buttonOptions' => [
                     'class' => 'btn btn-success',
+                ],
+                'buttons' => [
+                    'prepare' => function ($url, $model, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-envelope"></span>', $url, ['class' => 'btn btn-success', 'title' => 'Отправить', ]);
+                    },
                 ],
             ],
         ],
