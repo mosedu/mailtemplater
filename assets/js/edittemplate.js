@@ -219,8 +219,10 @@
             for(var i = 0; i < a.length; i++) {
                 var sClass = a[i],
                     oBorder = oBlock.find("." + sClass);
+                console.log("refreshBlockBorder(): oBorder class = " + sClass);
                 if( oBorder.length > 0 ) {
                     setBlockBorder(oBlock, sClass);
+                    console.log("refreshBlockBorder(): set border " + sClass);
                 }
             }
         };
@@ -245,8 +247,13 @@
             }
 
             if( sStyle != "" ) {
-                oBlock.find("."+sClass).remove();
-                oBlock.append('<div class="'+sClass+'" style="'+sStyle+'" />');
+                var oldBorder = oBlock.find("."+sClass);
+                if( oldBorder.length > 0 ) {
+                    oldBorder.attr("style", sStyle);
+                }
+                else {
+                    oBlock.append('<div class="'+sClass+'" style="'+sStyle+'" />');
+                }
             }
         };
 
@@ -354,8 +361,10 @@
                 }
 
                 if( isBlockImage(oCur) ) {
-                    var oImg = getBlockImage(oCur);
-                    return oImg.attr("src");
+                    var oImg = getBlockImage(oCur),
+                        sImg = jQuery("<div></div>").append(oImg.clone()).html();
+
+                    return sImg; // oImg.attr("src");
                 }
                 else {
                     var oTmp = oCur.clone();
@@ -373,11 +382,15 @@
                 }
 
                 if( isBlockImage(oCur) ) {
-                    //console.log("setBlockData() : image block");
+                    //console.log("setBlockData() : image block = " + sData);
                     var oImg = getBlockImage(oCurrent),
-                        ob = jQuery(sData);
+                        ob = jQuery("<div></div>").append(sData),
+                        src = ob.find("img:first").attr("src");
+                    //console.log("setBlockData() : ob = ", ob);
+                    //console.log("setBlockData() : src = " + src);
 
-                    oImg.attr("src", ob.text());
+                    //oImg.attr("src", ob.text());
+                    oImg.attr("src", src);
                 }
                 else if( isBlockText(oCur) ) {
                     //console.log("setBlockData() : text block");
@@ -387,7 +400,7 @@
                 }
 
                 setDataToSourceField();
-                refreshBlockBorder(oCur);
+                setTimeout(function(){refreshBlockBorder(oCur);}, 200)
             },
 
             settings: function (setname) {

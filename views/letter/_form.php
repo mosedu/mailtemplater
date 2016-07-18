@@ -11,6 +11,24 @@ use vova07\imperavi\Widget;
 /* @var $form yii\widgets\ActiveForm */
 
 $sTextId = Html::getInputId($model, 'let_text');
+$sCsrf = Yii::$app->request->csrfToken;
+
+/*
+jQuery("#mailtempl-mt_text")
+    .redactor({
+        "lang":"ru",
+        "minHeight":400,
+        "imageManagerJson":"/mailtempl/images-get",
+        "imageUpload":"/mailtempl/image-upload",
+        "replaceDivs":false,
+        "plugins":["clips","fullscreen","imagemanager"],
+        "uploadImageFields":{"_csrf":"WHVON0pMRWE/RzhmAwJ2DzQxK28eBhpTLQEGAxJ1F1ABPiB6Jg48EQ=="},
+        "uploadFileFields":{"_csrf":"WHVON0pMRWE/RzhmAwJ2DzQxK28eBhpTLQEGAxJ1F1ABPiB6Jg48EQ=="},
+        "imageUploadErrorCallback":function (response) { alert(response.error); }
+    });
+
+*/
+
 $sJs = <<<EOT
 var obArea = jQuery("#templatearea");
 var oTextEditField = jQuery("#text-block-field")
@@ -31,8 +49,11 @@ oImageEditField
     .redactor({
         replaceDivs: false,
         lang: "ru",
+        plugins:["imagemanager"],
         imageManagerJson: "/mailtempl/images-get",
         imageUpload: "/mailtempl/image-upload",
+        uploadImageFields: {"_csrf":"{$sCsrf}"},
+        imageUploadErrorCallback: function (response) { alert(response.error); },
         changeCallback: function() {
             obArea.templateeditor('setBlockData', this.code.get());
         }
