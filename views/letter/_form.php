@@ -31,15 +31,26 @@ jQuery("#mailtempl-mt_text")
 
 $sJs = <<<EOT
 var obArea = jQuery("#templatearea");
-var oTextEditField = jQuery("#text-block-field")
-var oImageEditField = jQuery("#image-block-field")
+var oTextEditField = jQuery("#text-block-field");
+var oImageEditField = jQuery("#image-block-field");
 var textArea = jQuery("#text-edit-group");
 var imageArea = jQuery("#image-edit-group");
+
+var oLetterPreview = jQuery("#col-letter-preview"),
+    oLetterTools = jQuery("#col-letter-tools");
 
 oTextEditField
     .redactor({
         replaceDivs: false,
         lang: "ru",
+
+        plugins:["imagemanager"],
+        imageManagerJson: "/mailtempl/images-get",
+        imageUpload: "/mailtempl/image-upload",
+        uploadImageFields: {"_csrf":"{$sCsrf}"},
+        uploadFileFields:{"_csrf":"{$sCsrf}"},
+        imageUploadErrorCallback: function (response) { alert(response.error); },
+
         changeCallback: function() {
             obArea.templateeditor('setBlockData', this.code.get());
         }
@@ -53,6 +64,7 @@ oImageEditField
         imageManagerJson: "/mailtempl/images-get",
         imageUpload: "/mailtempl/image-upload",
         uploadImageFields: {"_csrf":"{$sCsrf}"},
+        uploadFileFields:{"_csrf":"{$sCsrf}"},
         imageUploadErrorCallback: function (response) { alert(response.error); },
         changeCallback: function() {
             obArea.templateeditor('setBlockData', this.code.get());
@@ -87,15 +99,7 @@ obArea
                 if( isSelected ) {
                     textArea.show();
                     oTextEditField.redactor('code.set', obArea.templateeditor('getBlockData'));
-//                    oTextArea
-//                        .html(obArea.templateeditor('getBlockData'))
-//                        .redactor({
-//                            replaceDivs: false,
-//                            lang: "ru",
-//                            changeCallback: function() {
-//                                obArea.templateeditor('setBlockData', this.code.get());
-//                            }
-//                        });
+                    changeToolsPosition();
                 }
                 else {
                     textArea.hide();
@@ -109,6 +113,8 @@ obArea
                 if( isSelected ) {
                     imageArea.show();
                     oImageEditField.redactor('code.set', obArea.templateeditor('getBlockData'));
+                    changeToolsPosition();
+                    imageArea.find('a[rel="image"]').trigger("click");
                 }
                 else {
                     imageArea.hide();
@@ -121,6 +127,37 @@ obArea
 //            blockselector: ".block-element"
         }
     );
+
+var changeToolsPosition = function() {
+    var offsetPreview = oLetterPreview.offset(),
+        offsetTools = oLetterTools.offset(),
+        nTop = jQuery(document).scrollTop(),
+        nMenuBarHeigth = jQuery("#w1").height();
+
+        console.log("offsetPreview = ", offsetPreview);
+        console.log("offsetTools = ", offsetTools);
+        console.log("nTop  = ", nTop);
+
+        if( offsetPreview.top == offsetTools.top ) {
+            console.log("Can move tools");
+            if( nTop > 0 ) {
+                oLetterTools.css('padding-top', nTop - offsetPreview.top + nMenuBarHeigth);
+            }
+            else {
+                oLetterTools.css('padding-top', 0);
+            }
+            jQuery(document).trigger("scroll");
+        }
+        else {
+            oLetterTools.css('padding-top', 0);
+            jQuery("html, body").animate({ scrollTop: jQuery(document).height() }, 500);
+        }
+
+};
+
+//var setScrollEvents = function(event) {
+//    jQuery(window).on("scroll", function(event){ changeToolsPosition(); });
+//};
 EOT;
 
 $this->registerJs($sJs, View::POS_READY);
@@ -128,45 +165,46 @@ $this->registerJs($sJs, View::POS_READY);
 EdittemplateAsset::register($this);
 
 $asset = \vova07\imperavi\Asset::register($this);
+$asset->plugins = ['imagemanager'];
 $asset->language = 'ru';
 
 ?>
 
 <div class="letter-form">
     <div class="row">
-    <div class="col-md-8">
-        <?php $form = ActiveForm::begin(); ?>
-        <?= $form->field($model, 'let_subject')->textInput() ?>
-        <div style="display: none;">
-            <?= $form->field($model, 'let_text')->textarea(['rows' => 6]) ?>
-        </div>
+        <div class="col-md-8" id="col-letter-preview">
+            <?php $form = ActiveForm::begin(); ?>
+            <?= $form->field($model, 'let_subject')->textInput() ?>
+            <div style="display: none;">
+                <?= $form->field($model, 'let_text')->textarea(['rows' => 6]) ?>
+            </div>
 
-        <div id="templatearea" style="min-height: 100px; border: 1px solid #cccccc; padding: 10px;"></div>
-        <?= '' // $sHtml ?>
-        <div class="form-group">
-            <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить', [ 'class' => 'btn btn-success', ]) ?>
-        </div>
+            <div id="templatearea" style="min-height: 100px; border: 1px solid #cccccc; padding: 10px;"></div>
+            <?= '' // $sHtml ?>
+            <div class="form-group">
+                <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить', [ 'class' => 'btn btn-success', ]) ?>
+            </div>
 
-        <?php ActiveForm::end(); ?>
-        <div class="clearfix"></div>
-    </div>
-    <div class="col-md-4">
-        <div class="form-group" id="text-edit-group" style="display: none;">
-            <label class="control-label" for="letter-let_subject">Изменение текста</label>
+            <?php ActiveForm::end(); ?>
             <div class="clearfix"></div>
-            <?= Html::textarea('textblock', '', ['id' => 'text-block-field']) ?>
-            <div class="help-block"></div>
         </div>
+        <div class="col-md-4" id="col-letter-tools">
+            <div class="form-group" id="text-edit-group" style="display: none;">
+                <label class="control-label" for="letter-let_subject">Изменение текста</label>
+                <div class="clearfix"></div>
+                <?= Html::textarea('textblock', '', ['id' => 'text-block-field']) ?>
+                <div class="help-block"></div>
+            </div>
 
-        <div class="form-group" id="image-edit-group" style="display: none;">
-            <label class="control-label" for="letter-let_subject">Изменение картинки</label>
-            <div class="clearfix"></div>
-            <?= Html::a('Выбрать', '#', ['id' => 'image-select-link']) ?>
-            <div class="clearfix"></div>
-            <?= Html::textarea('imageblock', '', ['id' => 'image-block-field']) ?>
-            <div class="help-block"></div>
+            <div class="form-group" id="image-edit-group" style="display: none;">
+                <label class="control-label" for="letter-let_subject">Изменение картинки</label>
+                <div class="clearfix"></div>
+                <?= '' // Html::a('Выбрать', '#', ['id' => 'image-select-link']) ?>
+                <div class="clearfix"></div>
+                <?= Html::textarea('imageblock', '', ['id' => 'image-block-field']) ?>
+                <div class="help-block"></div>
+            </div>
         </div>
-    </div>
     </div>
 
 

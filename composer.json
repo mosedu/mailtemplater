@@ -21,7 +21,8 @@
         "vova07/yii2-imperavi-widget": "*",
         "mosedu/yii2-multirows": "*",
         "kartik-v/yii2-widget-select2": "@dev",
-        "yiisoft/yii2-jui": "^2.0"
+        "yiisoft/yii2-jui": "^2.0",
+        "yiisoft/yii2-httpclient": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

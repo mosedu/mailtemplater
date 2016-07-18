@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "249f1461909f07e3ec50ccaf03231ef4",
-    "content-hash": "6712188cc4ce77de80f1f5731dcd733f",
+    "hash": "fff55e2eb9bb0cc0d43a4f85fd793076",
+    "content-hash": "1915467c4503e176700a2e820e42fae4",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -773,6 +773,53 @@
                 "yii2"
             ],
             "time": "2016-02-06 00:49:24"
+        },
+        {
+            "name": "yiisoft/yii2-httpclient",
+            "version": "2.0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-httpclient.git",
+                "reference": "782ef0972ad900f3c070d8a085555826e12f2c3f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-httpclient/zipball/782ef0972ad900f3c070d8a085555826e12f2c3f",
+                "reference": "782ef0972ad900f3c070d8a085555826e12f2c3f",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\httpclient\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Klimov",
+                    "email": "klimov.paul@gmail.com"
+                }
+            ],
+            "description": "HTTP client extension for the Yii framework",
+            "keywords": [
+                "curl",
+                "http",
+                "httpclient",
+                "yii2"
+            ],
+            "time": "2016-07-01 17:31:38"
         },
         {
             "name": "yiisoft/yii2-jui",

@@ -219,10 +219,10 @@
             for(var i = 0; i < a.length; i++) {
                 var sClass = a[i],
                     oBorder = oBlock.find("." + sClass);
-                console.log("refreshBlockBorder(): oBorder class = " + sClass);
+
                 if( oBorder.length > 0 ) {
                     setBlockBorder(oBlock, sClass);
-                    console.log("refreshBlockBorder(): set border " + sClass);
+                    //console.log("refreshBlockBorder(): set border " + sClass);
                 }
             }
         };
